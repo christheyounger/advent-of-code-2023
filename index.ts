@@ -1,7 +1,8 @@
-import { day1 } from "./day1/day1"
+import { part1, part2 } from "./day2/day"
 
-const file = Bun.file('day1/input.txt');
+const file = Bun.file('day2/input.txt');
 
 const data = await file.text();
 
-console.log(day1(data));
+console.log(part1(data));
+console.log(part2(data));
