@@ -53,17 +53,14 @@ const countWays = memoize((springs: string, numbers: number[]): number => {
         // ignore the working spring
         return countWays(springs.slice(1), numbers);
     }
-    if (springs[0] === '#') {
+    if (springs[0] === BROKEN) {
         const [current, ...rest] = numbers;
-        for (let i = 0; i < current; i++) {
-            if (springs[i] === WORKING) {
-                return 0; // not enough space for broken springs
-            }
+        if (springs.slice(0, current).includes(WORKING)) {
+            return 0; // not enough space for broken springs
         }
-        if (springs[current] === '#') { // too many broken springs
+        if (springs[current] === BROKEN) { // too many broken springs
             return 0;
         }
-
         // it fits, proceed.
         return countWays(springs.slice(current+1), rest);
     }
@@ -77,9 +74,7 @@ export function part1(input: string): number {
     const lines = parseInput(input);
     let total = 0;
     for (const [springs, numbers] of lines) {
-        const ways = countWays(springs, numbers);
-        console.log({ springs, numbers, ways });
-        total += ways;
+        total +=countWays(springs, numbers);
     }
     return total;
 }
@@ -88,9 +83,10 @@ export function part2(input: string): number {
     const lines = parseInput(input);
     let total = 0;
     for (const [springs, numbers] of lines) {
-        const ways = countWays([springs, springs, springs, springs, springs].join('?'), [...numbers, ...numbers, ...numbers, ...numbers, ...numbers]);
-        console.log({ springs, numbers, ways });
-        total += ways;
+        total += countWays(
+            [springs, springs, springs, springs, springs].join('?'),
+            [...numbers, ...numbers, ...numbers, ...numbers, ...numbers]
+        );
     }
     return total;
 }
